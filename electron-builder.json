@@ -1,0 +1,16 @@
+{
+    "appId": "comsadasexamplefdfsdfapp",
+    "productName": "YourAppName",
+    "directories": {
+        "output": "dist"
+    },
+    "win": {
+        "target": "portable"
+    },
+    "mac": {
+        "target": "dmg"
+    },
+    "linux": {
+        "target": "AppImage"
+    }
+}
