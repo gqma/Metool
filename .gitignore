@@ -1,6 +1,7 @@
 node_modules
-
+forge.config.js
 out/
 /.history
 /.vscode
 /dist
+forge.config.js

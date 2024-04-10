@@ -1,6 +1,16 @@
-const { app, BrowserWindow, autoUpdater } = require('electron');
+const { app, BrowserWindow } = require('electron');
+const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
 const path = require('path');
 const url = require('url');
+
+updateElectronApp({
+    updateSource: {
+      type: UpdateSourceType.ElectronPublicUpdateService,
+      repo: 'github-user/repo'
+    },
+    updateInterval: '1 hour',
+    logger: require('electron-log')
+  })
 
 // 开发环境下使用 electron-reloader
 if (process.env.NODE_ENV === 'development') {
@@ -9,27 +19,6 @@ if (process.env.NODE_ENV === 'development') {
         watchRenderer: true
     });
 }
-
-
-
-// // 配置自动更新的服务器地址和应用程序包信息
-// autoUpdater.setFeedURL({
-//     provider: 'github',
-//     repo: 'your-github-repo',
-//     owner: 'your-github-username',
-//     private: false
-// });
-
-// // 监听更新下载完成事件
-// autoUpdater.on('update-downloaded', () => {
-//     // 在更新下载完成后，提示用户安装更新
-//     autoUpdater.quitAndInstall();
-// });
-
-// // 检查更新
-// app.on('ready', () => {
-//     autoUpdater.checkForUpdates();
-// });
 
 let mainWindow;
 
