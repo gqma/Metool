@@ -8,7 +8,7 @@
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
+            /* align-items: center; */
             height: 100vh;
             margin: 0;
         }
@@ -25,7 +25,9 @@
             display: flex;
             /* align-items: center; */
             flex-direction: row;
+            justify-content:space-between;
             flex: 3,1;
+
         }
 
         input[type="text"] {
@@ -36,23 +38,28 @@
             background-color: #007bff;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            width: 80px;
         }
 
         button:hover {
             background-color: #0056b3;
+        }
+        div{
+            margin-top: 20px;
         }
 
     </style>
 </head>
 <body>
     <div class="box">
-        <button onclick="reload()">重新加载</button>
         <h1>变量名翻译工具</h1>
         <div class="input-box">
             <input type="text" id="searchInput" placeholder="输入变量名">
-            <button id="reloadButton" onclick="search()">搜索</button>
+            <button id="searchButton" onclick="search()">搜索</button>
         </div>
+        <div id="result">None</div>
     </div>
 
     <script src="renderer.js"></script>

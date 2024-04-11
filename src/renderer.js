@@ -1,33 +1,27 @@
-const { ipcRenderer } = require('electron');
 
+let ipcRenderer; // 声明一个全局变量用来存储 ipcRenderer
 
-
-
-// 热更新需要重新加载页面
-ipcRenderer.on('reload', () => {
-    location.reload();
+window.addEventListener('DOMContentLoaded', () => {
+    ipcRenderer = require('electron').ipcRenderer;
 });
 
+
+/***********************  Search  **************************/
 function search() {
     const input = document.getElementById('searchInput').value;
-
     ipcRenderer.send('search', input);
 }
 
 ipcRenderer.on('searchResult', (event, result) => {
     const resultDiv = document.getElementById('result');
+    console.log(result)
+    console.log(resultDiv)
+    resultDiv.innerText = '未找到翻译结果';
 
-    if (result) {
+    if (result.length > 0) {
         resultDiv.innerText = `翻译结果：${result}`;
     } else {
         resultDiv.innerText = '未找到翻译结果';
     }
 });
-
-
-document.getElementById('reloadButton').addEventListener('click', reload);
-
-function reload() {
-    console.log(111111)
-    ipcRenderer.send('reload');
-}
+/***********************  Search  **************************/
