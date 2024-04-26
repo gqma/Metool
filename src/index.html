@@ -1,67 +1,246 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
-    <title>变量名翻译工具</title>
+    <title>Metool</title>
     <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
         body {
             font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            /* justify-content: center; */
             /* align-items: center; */
-            height: 100vh;
+            /* height: 100vh;
+            width: 100vw; */
+            margin: 0 auto;
+            /* background-color: rgb(226, 234, 221); */
+        }
+
+        .layout {
+            display: flex;
+            margin: 0.5em;
+            flex-direction: row;
+            flex: 1 1 auto;
+            overflow: hidden;
+        }
+
+        .menu {
+            width: 100px;
+            min-width: 100px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            text-align: center;
+            margin: 1em 0;
+        }
+
+        .submenu {
+            margin-top: 1em;
+            display: flex;
+            flex-direction: column;
+            flex: 1 1;
+            /* flex: 0 0 200px; 左边菜单栏固定宽度为 200px */
+        }
+
+        .main {
+            margin: 1em 0;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            width: 100%;
+            height: 95%;
+            overflow-y: auto;
+            /* 内容区域内容超出高度时显示滚动条 */
+        }
+
+        /* 内容区域样式 */
+        .content {
+            display: none;
+            /* 默认隐藏内容区域 */
+        }
+
+        /* 显示内容区域的样式 */
+        .content.active {
+            display: block;
+            /* 显示内容区域 */
+        }
+
+        .menu-item {
+            margin: 0.5em;
+            height: 2em;
+            line-height: 2em;
+            cursor: pointer;
+            /* 鼠标样式为手型，表示可以点击 */
+            transition: background-color 0.3s;
+            user-select: none;
+            /* 添加过渡效果 */
+        }
+
+        /* 鼠标悬停时的样式 */
+        .menu-item:hover {
+            background-color: #e0e0e0;
+            /* border: 1px solid #ccc; */
+        }
+
+        /* 点击时的样式 */
+        .menu-item.active {
+            background-color: #d0d0d0;
+        }
+
+        ul {
+            margin-top: 1em;
+            width: 100%;
+            list-style-type: none;
+            padding: 0;
+            /* 去除默认的内边距 */
+            text-align: center;
+        }
+
+        ul>li {
+            box-sizing: border-box;
+            /* 保持元素的宽度不受内边距和边框影响 */
+            background-color: azure;
+            height: 20px;
+            line-height: 20px;
+            font-size: 12px;
+            width: 100%;
+            height: 2em;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        /* 分隔线样式 */
+        .vertical-line {
+            border-left: 1px solid #ccc;
+            /* 设置左边框为1px实线，颜色为灰色 */
+            height: 95%;
+            /* 设置分隔线的高度 */
+            margin: 0 0.5em;
+            /* 设置分隔线左右边距 */
+        }
+
+        .row-line {
+            border: none;
+            border-top: 1px solid #ccc;
+            /* 设置分隔线颜色和样式 */
             margin: 0;
         }
-        .box{
-            width: 300px;
-            height: 300px;
-            display: flex;
-            /* align-items: center; */
-            flex-direction: column;
-        }
-        .input-box{
-            width: 300px;
-            height: 30px;
-            display: flex;
-            /* align-items: center; */
-            flex-direction: row;
-            justify-content:space-between;
-            flex: 3,1;
 
+        /* 分隔线样式 */
+        input {
+            margin: 0 auto;
+            width: 100%;
+            display: block;
+            /* 设置为块级元素 */
+            box-sizing: border-box;
+            /* 保持元素的宽度不受内边距和边框影响 */
+            text-align: center;
         }
 
-        input[type="text"] {
-            width: 200px;
+        input::placeholder {
+            text-align: center;
+            /* 居中对齐 */
         }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 80px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-        div{
-            margin-top: 20px;
-        }
-
     </style>
 </head>
-<body>
-    <div class="box">
-        <h1>变量名翻译工具</h1>
-        <div class="input-box">
-            <input type="text" id="searchInput" placeholder="输入变量名">
-            <button id="searchButton" onclick="search()">搜索</button>
-        </div>
-        <div id="result">None</div>
-    </div>
 
-    <script src="renderer.js"></script>
+<body>
+    <hr class="row-line">
+    <div class="layout">
+        <div class="menu">
+            <input id="searchItem" type="text" placeholder="搜索菜单项...">
+            <div class="submenu">
+                <span class="menu-item" data-value="1">变量命名</span>
+                <span class="menu-item" data-value="2">气象简报</span>
+                <span class="menu-item" data-value="3">数据渲染</span>
+                <span class="menu-item" data-value="4">文档查询</span>
+            </div>
+        </div>
+        <hr class="vertical-line">
+        <div class="main content" data-content="1">
+            <!--变量命名 -->
+            <div class="input-box">
+                <input type="text" id="searchInput" placeholder="输入变量名">
+            </div>
+            <div id="result"></div>
+        </div>
+
+        <script src="renderer.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
+        <script>
+            let focus_submenu = "1"
+            const menu_item_map = [
+                { item: "1", name: "变量命名" },
+                { item: "2", name: "气象简报" },
+                { item: "3", name: "数据渲染" },
+                { item: "4", name: "文档查询" }
+            ]
+            // 获取所有菜单项的 span 元素
+            const menuItems = document.querySelectorAll('.menu-item');
+            // 获取所有内容区域的 div 元素
+            const contents = document.querySelectorAll('.main');
+
+            const fuse = new Fuse(menu_item_map, {
+                keys: [{ name: 'name', weight: 0.7 }], // 设置权重，可根据实际情况调整
+                // { name: 'item', weight: 0.3 }], // 搜索的字段，可以是单个字段或多个字段的数组
+                includeScore: true, // 是否返回搜索结果的匹配得分
+                threshold: 0.4, // 匹配阈值，0 表示完全匹配，1 表示模糊匹配
+            });
+            const searchItem = document.getElementById('searchItem');
+            searchItem.addEventListener('blur', () => {
+                searchItem.value = '';
+            });
+            searchItem.addEventListener('input', () => {
+                const searchText = searchItem.value.trim();
+                const results = fuse.search(searchText);
+                if (results.length === 0) {
+                    console.log("no item");
+                } else {
+                    menuItems.forEach(menuItem => {
+                        if (menuItem.getAttribute('data-value') === results[0].item.item) {
+                            menuItem.click();
+                        } else {
+                            menuItem.classList.remove('active');
+                        }
+                    })
+                }
+            });
+
+
+
+            // 为每个菜单项添加点击事件监听器
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+
+                    // 移除所有菜单项的 active 类
+                    menuItems.forEach(item => {
+                        item.classList.remove('active');
+                    });
+
+                    // 添加点击菜单项的 active 类
+                    item.classList.add('active');
+                    const value = item.getAttribute('data-value');
+                    select_item(value)
+
+                });
+            });
+            function select_item(value) {
+                contents.forEach(content => {
+                    if (content.getAttribute('data-content') === value) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            }
+        </script>
 </body>
+
 </html>

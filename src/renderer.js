@@ -13,6 +13,8 @@ function search() {
 }
 
 ipcRenderer.on('searchResult', (event, result) => {
+    console.log("获取主线程传递的搜索结果")
+    // console.log(result)
     const resultDiv = document.getElementById('result');
     console.log(result)
     console.log(resultDiv)
@@ -21,7 +23,7 @@ ipcRenderer.on('searchResult', (event, result) => {
     if (result.length > 0) {
         resultDiv.innerText = `翻译结果：${result}`;
     } else {
-        resultDiv.innerText = '未找到翻译结果';
+        resultDiv.innerText = '';
     }
 });
 /***********************  Search  **************************/
