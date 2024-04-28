@@ -2,7 +2,7 @@ const {app, BrowserWindow, ipcMain, Menu, dialog, globalShortcut  } = require('e
 const { autoUpdater } = require('electron-updater');
 const Fuse = require('fuse.js');
 const url = require("url");
-const path = require("path");
+const path = require('node:path')
 const fs = require('fs');
 
 // const electron_app = require('update-electron-app')
@@ -36,6 +36,7 @@ function createWindow() {
         height: 600,
         // autoHideMenuBar: true, // 设置自动隐藏菜单栏
         webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
             contextIsolation: false
         }
@@ -74,6 +75,7 @@ function createWindow() {
 
 // 程序启动时
 app.on('ready', ()=>{
+    ipcMain.handle('ping', () => 'pong')
     createWindow()
     mainWindow.loadURL(
       url.format({
@@ -158,7 +160,8 @@ dialog.showMessageBox({
 
 // 假设 database 是包含对象的数组，每个对象有一个 name 字段
 const options = {
-    keys: ['name'], // 搜索的字段，可以是单个字段或多个字段的数组
+    keys: [{ name: 'name_zh', weight: 0.7 }, // 设置权重，可根据实际情况调整
+    { name: 'name_en', weight: 0.3 }], // 搜索的字段，可以是单个字段或多个字段的数组
     includeScore: true, // 是否返回搜索结果的匹配得分
     threshold: 0.4, // 匹配阈值，0 表示完全匹配，1 表示模糊匹配
 };
@@ -167,9 +170,8 @@ const options = {
 // 进行模糊搜索
 
 ipcMain.on('search', (event, input) => {
-
-    console.log('This is a log message from the main process');
-
+    let nameEns=[]
+    // console.log("接收到渲染进程消息：", input)
     fs.readFile(path.join(__dirname, 'database.json'), "UTF8", (err, data) => {
         if (err) {
             console.error(err);
@@ -178,14 +180,12 @@ ipcMain.on('search', (event, input) => {
         }
 
         const database = JSON.parse(data);
-        console.log("database")
-        console.log(database)
-
-        // 初始化 Fuse 实例
+                // 初始化 Fuse 实例
         const fuse = new Fuse(database, options);
         // 进行模糊搜索
-        const result = fuse.search(input);
-        event.sender.send('searchResult', result);
+        const searchResults = fuse.search(input);
+        names = searchResults.map(result => ({ name_en: result.item.name_en, name_zh: result.item.name_zh }));
+        event.sender.send('searchResult', names);
     });
 });
 
